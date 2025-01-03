@@ -16,10 +16,11 @@ class TestLeafNode(unittest.TestCase):
 
     text = "Click me!"
 
-    def test_empty_value_raises_error(self):
-        with self.assertRaises(ValueError):
-            node = LeafNode(None, "")
-            node.to_html()
+    def test_empty_value(self):
+    
+        node = LeafNode(None, "")
+        self.assertEqual("",node.to_html())
+        
 
     def test_empty_value_raises_error2(self):
         with self.assertRaises(ValueError):

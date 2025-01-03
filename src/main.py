@@ -1,14 +1,29 @@
 from textnode import TextNode, TextType
-from htmlnode import HTMLNode
-from leafnode import LeafNode
+from htmlnode import HTMLNode, LeafNode
 
 prop_example2 = {
     "href": "https://www.google.com",
 }
+def text_node_to_html_node(text_node):
+    match text_node.text_type:
+        case TextType.TEXT:
+            return LeafNode(None, text_node.text)
+        case TextType.BOLD:
+            return LeafNode('b', text_node.text)
+        case TextType.ITALIC:
+            return LeafNode('i', text_node.text)
+        case TextType.CODE:
+            return LeafNode('code', text_node.text)
+        case TextType.LINK:
+            return LeafNode('a', text_node.text, {'href':text_node.url})
+        case TextType.IMAGE:
+            return LeafNode('img', "", {'src':text_node.url, 'alt': text_node.text})
 
+        case _:
+            raise Exception("Not a valid text type")
 
 def main():
-    cato = TextNode("This is a text node", TextType.BOLD, "https://www.boot.dev")
+    cato = TextNode("This is a text node", TextType.IMAGE, "https://www.boot.dev")
     node = HTMLNode(
         "a",
         "This is a string representing the value of the HTML tag",
@@ -16,10 +31,7 @@ def main():
         prop_example2,
     )
     lfnode = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
-    print(repr(cato))
-    print(repr(node))
-    print(lfnode.to_html())
-
+    print(text_node_to_html_node(cato).to_html())
 
 if __name__ == "__main__":
     main()
