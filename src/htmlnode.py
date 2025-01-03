@@ -44,7 +44,7 @@ class ParentNode(HTMLNode):
     def to_html(self):
         if not self.tag:
             raise ValueError("Invalid HTML: no tag")
-        return f'<{self.tag}>{self._children_to_html()}</{self.tag}>'
+        return f"<{self.tag}>{self._children_to_html()}</{self.tag}>"
 
 
 node = ParentNode(
@@ -55,15 +55,15 @@ node = ParentNode(
         LeafNode("i", "italic text"),
         LeafNode(None, "Normal text"),
         ParentNode(
-    "p",
-    [
-        LeafNode("b", "Bold text2"),
-        LeafNode(None, "Normal text2"),
-        LeafNode("i", "italic text2"),
-        LeafNode(None, "Normal text2"),
-    ],
-)
+            "p",
+            [
+                LeafNode("b", "Bold text2"),
+                LeafNode(None, "Normal text2"),
+                LeafNode("i", "italic text2"),
+                LeafNode(None, "Normal text2"),
+            ],
+        ),
     ],
 )
 
-print(node.to_html())
+# print(node.to_html())
