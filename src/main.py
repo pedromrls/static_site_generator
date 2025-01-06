@@ -5,6 +5,7 @@ prop_example2 = {
     "href": "https://www.google.com",
 }
 
+
 def main():
     cato = TextNode("This is a text node", TextType.IMAGE, "https://www.boot.dev")
     node = HTMLNode(
@@ -15,6 +16,7 @@ def main():
     )
     lfnode = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
     print(text_node_to_html_node(cato).to_html())
+
 
 if __name__ == "__main__":
     main()
