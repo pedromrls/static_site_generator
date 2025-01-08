@@ -41,7 +41,7 @@ def split_nodes_image(old_nodes):
         if not images:
             new_nodes.append(node)
             continue
-        
+
         current_text = node.text
         for alt, link in images:
             before, *remainder = current_text.split(f"![{alt}]({link})", 1)
@@ -51,9 +51,8 @@ def split_nodes_image(old_nodes):
             current_text = remainder[0] if remainder else ""
         if current_text:
             new_nodes.append(TextNode(current_text, node.text_type))
-                
+
     return new_nodes
-    
 
 
 def split_nodes_link(old_nodes):
@@ -63,7 +62,7 @@ def split_nodes_link(old_nodes):
         if not links:
             new_nodes.append(node)
             continue
-        
+
         current_text = node.text
         for alt, link in links:
             before, *remainder = current_text.split(f"[{alt}]({link})", 1)
@@ -73,5 +72,5 @@ def split_nodes_link(old_nodes):
             current_text = remainder[0] if remainder else ""
         if current_text:
             new_nodes.append(TextNode(current_text, node.text_type))
-                
+
     return new_nodes

@@ -3,6 +3,8 @@ from inline_markdown import (
     split_nodes_delimiter,
     extract_markdown_images,
     extract_markdown_links,
+    split_nodes_link,
+    split_nodes_image,
 )
 from textnode import TextNode, TextType
 
@@ -112,6 +114,69 @@ class TestSplitDelimiter(unittest.TestCase):
             extract_markdown_images(text),
         )
 
+    # test_split_nodes_image
 
+    def test_image_simple_case(self):
+        node = TextNode("text ![image](test.png) text", TextType.TEXT)
+        expected = [
+            TextNode("text ", TextType.TEXT),
+            TextNode("image", TextType.IMAGE, "test.png"),
+            TextNode(" text", TextType.TEXT)
+        ]
+        self.assertEqual(expected, split_nodes_image([node]))
+
+    def test_image_multiple(self):
+        node = TextNode("![1](1.png) mid ![2](2.png)", TextType.TEXT)
+        expected = [
+            TextNode("1", TextType.IMAGE, "1.png"),
+            TextNode(" mid ", TextType.TEXT),
+            TextNode("2", TextType.IMAGE, "2.png")
+        ]
+        self.assertEqual(expected, split_nodes_image([node]))
+
+    def test_image_no_images(self):
+        node = TextNode("just plain text", TextType.TEXT)
+        expected = [node]
+        self.assertEqual(expected, split_nodes_image([node]))
+
+    def test_image_empty_sections(self):
+        node = TextNode("![alt](test.png)", TextType.TEXT)
+        expected = [
+            TextNode("alt", TextType.IMAGE, "test.png")
+        ]
+        self.assertEqual(expected, split_nodes_image([node]))
+
+    # test_split_nodes_link
+
+    def test_link_simple_case(self):
+        node = TextNode("text [link](test.com) text", TextType.TEXT)
+        expected = [
+            TextNode("text ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "test.com"),
+            TextNode(" text", TextType.TEXT)
+        ]
+        self.assertEqual(expected, split_nodes_link([node]))
+
+    def test_link_multiple(self):
+        node = TextNode("[1](1.com) mid [2](2.com)", TextType.TEXT)
+        expected = [
+            TextNode("1", TextType.LINK, "1.com"),
+            TextNode(" mid ", TextType.TEXT),
+            TextNode("2", TextType.LINK, "2.com")
+        ]
+        self.assertEqual(expected, split_nodes_link([node]))
+
+    def test_link_no_links(self):
+        node = TextNode("just plain text", TextType.TEXT)
+        expected = [node]
+        self.assertEqual(expected, split_nodes_link([node]))
+
+    def test_link_empty_sections(self):
+        node = TextNode("[alt](test.png)", TextType.TEXT)
+        expected = [
+            TextNode("alt", TextType.LINK, "test.png")
+        ]
+        self.assertEqual(expected, split_nodes_link([node]))
+    
 if __name__ == "__main__":
     unittest.main()
