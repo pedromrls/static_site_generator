@@ -121,7 +121,7 @@ class TestSplitDelimiter(unittest.TestCase):
         expected = [
             TextNode("text ", TextType.TEXT),
             TextNode("image", TextType.IMAGE, "test.png"),
-            TextNode(" text", TextType.TEXT)
+            TextNode(" text", TextType.TEXT),
         ]
         self.assertEqual(expected, split_nodes_image([node]))
 
@@ -130,7 +130,7 @@ class TestSplitDelimiter(unittest.TestCase):
         expected = [
             TextNode("1", TextType.IMAGE, "1.png"),
             TextNode(" mid ", TextType.TEXT),
-            TextNode("2", TextType.IMAGE, "2.png")
+            TextNode("2", TextType.IMAGE, "2.png"),
         ]
         self.assertEqual(expected, split_nodes_image([node]))
 
@@ -141,9 +141,7 @@ class TestSplitDelimiter(unittest.TestCase):
 
     def test_image_empty_sections(self):
         node = TextNode("![alt](test.png)", TextType.TEXT)
-        expected = [
-            TextNode("alt", TextType.IMAGE, "test.png")
-        ]
+        expected = [TextNode("alt", TextType.IMAGE, "test.png")]
         self.assertEqual(expected, split_nodes_image([node]))
 
     # test_split_nodes_link
@@ -153,7 +151,7 @@ class TestSplitDelimiter(unittest.TestCase):
         expected = [
             TextNode("text ", TextType.TEXT),
             TextNode("link", TextType.LINK, "test.com"),
-            TextNode(" text", TextType.TEXT)
+            TextNode(" text", TextType.TEXT),
         ]
         self.assertEqual(expected, split_nodes_link([node]))
 
@@ -162,7 +160,7 @@ class TestSplitDelimiter(unittest.TestCase):
         expected = [
             TextNode("1", TextType.LINK, "1.com"),
             TextNode(" mid ", TextType.TEXT),
-            TextNode("2", TextType.LINK, "2.com")
+            TextNode("2", TextType.LINK, "2.com"),
         ]
         self.assertEqual(expected, split_nodes_link([node]))
 
@@ -173,10 +171,9 @@ class TestSplitDelimiter(unittest.TestCase):
 
     def test_link_empty_sections(self):
         node = TextNode("[alt](test.png)", TextType.TEXT)
-        expected = [
-            TextNode("alt", TextType.LINK, "test.png")
-        ]
+        expected = [TextNode("alt", TextType.LINK, "test.png")]
         self.assertEqual(expected, split_nodes_link([node]))
-    
+
+
 if __name__ == "__main__":
     unittest.main()
