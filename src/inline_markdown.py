@@ -37,13 +37,21 @@ def extract_markdown_links(text):
 def split_nodes_image(old_nodes):
     new_nodes = []
     for node in old_nodes:
-        if not extract_markdown_images(node.text):
+        images = extract_markdown_images(node.text)
+        if not images:
             new_nodes.append(node)
-        else:
-            param =  extract_markdown_images(node.text)
-            for i in param:
-                new_node = TextNode(i[0], TextType.IMAGE, i[1])
-                new_nodes.append(new_node)
+            continue
+        
+        current_text = node.text
+        for alt, link in images:
+            before, *remainder = current_text.split(f"![{alt}]({link})", 1)
+            if before:
+                new_nodes.append(TextNode(before, node.text_type))
+            new_nodes.append(TextNode(alt, TextType.IMAGE, link))
+            current_text = remainder[0] if remainder else ""
+        if current_text:
+            new_nodes.append(TextNode(current_text, node.text_type))
+                
     return new_nodes
     
 
@@ -51,11 +59,19 @@ def split_nodes_image(old_nodes):
 def split_nodes_link(old_nodes):
     new_nodes = []
     for node in old_nodes:
-        if not extract_markdown_links(node.text):
+        links = extract_markdown_links(node.text)
+        if not links:
             new_nodes.append(node)
-        else:
-            param =  extract_markdown_links(node.text)
-            for i in param:
-                new_node = TextNode(i[0], TextType.LINK, i[1])
-                new_nodes.append(new_node)
+            continue
+        
+        current_text = node.text
+        for alt, link in links:
+            before, *remainder = current_text.split(f"[{alt}]({link})", 1)
+            if before:
+                new_nodes.append(TextNode(before, node.text_type))
+            new_nodes.append(TextNode(alt, TextType.LINK, link))
+            current_text = remainder[0] if remainder else ""
+        if current_text:
+            new_nodes.append(TextNode(current_text, node.text_type))
+                
     return new_nodes
