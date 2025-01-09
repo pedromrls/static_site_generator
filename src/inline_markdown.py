@@ -14,7 +14,9 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
             continue
 
         if node.text.count(delimiter) % 2:
-            raise ValueError("Invalid markdown, unclosed delimiter found")
+            raise ValueError(
+                f"Unclosed formatting detected for '{delimiter}' starting at position {node.text.index(delimiter)}"
+            )
 
         parts = node.text.split(delimiter)
 
@@ -75,3 +77,14 @@ def split_nodes_link(old_nodes):
             new_nodes.append(TextNode(current_text, node.text_type))
 
     return new_nodes
+
+
+def text_to_textnodes(text):
+    node = TextNode(text, TextType.TEXT)
+    bold = split_nodes_delimiter([node], "**", TextType.BOLD)
+    italic = split_nodes_delimiter(bold, "*", TextType.ITALIC)
+    code = split_nodes_delimiter(italic, "`", TextType.CODE)
+    link = split_nodes_link(code)
+    image = split_nodes_image(link)
+
+    return image

@@ -5,6 +5,7 @@ from inline_markdown import (
     extract_markdown_links,
     split_nodes_link,
     split_nodes_image,
+    text_to_textnodes,
 )
 from textnode import TextNode, TextType
 
@@ -173,6 +174,139 @@ class TestSplitDelimiter(unittest.TestCase):
         node = TextNode("[alt](test.png)", TextType.TEXT)
         expected = [TextNode("alt", TextType.LINK, "test.png")]
         self.assertEqual(expected, split_nodes_link([node]))
+
+    # test texnodes
+    def test_handles_simple_bold_and_italic(self):
+        text = "This is **bold** and *italic*"
+        node = text_to_textnodes(text)
+        self.assertEqual(
+            [
+                TextNode("This is ", TextType.TEXT),
+                TextNode("bold", TextType.BOLD),
+                TextNode(" and ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+            ],
+            node,
+        )
+
+    def test_parses_multiple_formats(self):
+        text = "**bold**, *italic*, `code block`, and ![alt text](image_url)"
+        node = text_to_textnodes(text)
+        self.assertEqual(
+            [
+                TextNode("bold", TextType.BOLD),
+                TextNode(", ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+                TextNode(", ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+                TextNode(", and ", TextType.TEXT),
+                TextNode("alt text", TextType.IMAGE, "image_url"),
+            ],
+            node,
+        )
+
+    def test_handles_plain_text_only(self):
+        text = "Just plain text with no formatting."
+        node = text_to_textnodes(text)
+        self.assertEqual(
+            [
+                TextNode("Just plain text with no formatting.", TextType.TEXT),
+            ],
+            node,
+        )
+
+    def test_returns_empty_list_for_empty_input(self):
+        text = ""
+        node = text_to_textnodes(text)
+        self.assertEqual(
+            [],
+            node,
+        )
+
+    def test_image_without_alt_text(self):
+        text = "![](image_url)"
+        node = text_to_textnodes(text)
+        self.assertEqual(
+            [
+                TextNode("", TextType.IMAGE, "image_url"),
+            ],
+            node,
+        )
+
+    def test_incomplete_formatting(self):
+        with self.assertRaises(ValueError) as context:
+            text = "This is **bold and *italic but unclosed."
+            node = text_to_textnodes(text)
+        self.assertEqual(
+            str(context.exception),
+            "Unclosed formatting detected for '**' starting at position 8",
+        )
+
+    def test_text_with_extra_spaces(self):
+        text = "  **bold**   "
+        node = text_to_textnodes(text)
+        self.assertEqual(
+            [
+                TextNode("  ", TextType.TEXT),
+                TextNode("bold", TextType.BOLD),
+                TextNode("   ", TextType.TEXT),
+            ],
+            node,
+        )
+
+    def test_multiple_images_in_text(self):
+        text = "Here is one image: ![first image](url1) and another: ![second image](url2)."
+        node = text_to_textnodes(text)
+        self.assertEqual(
+            [
+                TextNode("Here is one image: ", TextType.TEXT),
+                TextNode("first image", TextType.IMAGE, "url1"),
+                TextNode(" and another: ", TextType.TEXT),
+                TextNode("second image", TextType.IMAGE, "url2"),
+                TextNode(".", TextType.TEXT),
+            ],
+            node,
+        )
+
+    def test_code_block_with_symbols(self):
+        text = "Look at this `code_block_with_symbols!@#$%^&()` for fun."
+        node = text_to_textnodes(text)
+        self.assertEqual(
+            [
+                TextNode("Look at this ", TextType.TEXT),
+                TextNode("code_block_with_symbols!@#$%^&()", TextType.CODE),
+                TextNode(" for fun.", TextType.TEXT),
+            ],
+            node,
+        )
+
+    def test_mixed_format_with_no_spaces(self):
+        text = "**bold***italic*`code_block`no_spaces!"
+        node = text_to_textnodes(text)
+        self.assertEqual(
+            [
+                TextNode("bold", TextType.BOLD),
+                TextNode("italic", TextType.ITALIC),
+                TextNode("code_block", TextType.CODE),
+                TextNode("no_spaces!", TextType.TEXT),
+            ],
+            node,
+        )
+
+    def test_unusual_but_valid_markdown(self):
+        text = "Text ![alt](url) **bold**![alt2](url2)."
+        node = text_to_textnodes(text)
+        self.assertEqual(
+            [
+                TextNode("Text ", TextType.TEXT),
+                TextNode("alt", TextType.IMAGE, "url"),
+                TextNode(" ", TextType.TEXT),
+                TextNode("bold", TextType.BOLD),
+                TextNode("alt2", TextType.IMAGE, "url2"),
+                TextNode(".", TextType.TEXT),
+            ],
+            node,
+        )
 
 
 if __name__ == "__main__":
