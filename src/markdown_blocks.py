@@ -66,9 +66,11 @@ def markdown_to_html_node(markdown):
             parent = ParentNode(heading_tag, text_to_textnodes(heading_content))
 
         elif block_type == block_code:
-            pass
+            clean_block = block[2:-2]
+            parent = ParentNode("pre", text_to_textnodes(clean_block))
         elif block_type == block_quote:
-            pass
+            clean_block = block[1:]
+            parent = ParentNode("blockquote", text_to_textnodes(clean_block))
         elif block_type == block_ol:
             pass
         elif block_type == block_ul:
