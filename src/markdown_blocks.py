@@ -83,8 +83,15 @@ def code_to_htmlnode(block):
     return ParentNode("pre", code)
 
 def quote_to_htmlnode(block):
-    text = block[1:]
-    parent = ParentNode("blockquote", text_to_textnodes(clean_block))
+    lines = block.split("\n")
+    new_lines = []
+    for line in lines:
+        if not line.startswith(">"):
+            raise ValueError("Invalid quote block")
+        new_lines.append(line[1:].strip())
+    text = " ".join(new_lines)
+    children = text_to_children(text)
+    return ParentNode("blockquote", children)
 
 def olist_to_htmlnode(block):
     pass
