@@ -11,6 +11,7 @@ from markdown_blocks import (
     block_quote,
 )
 
+
 class TestMarkdownBlocks(unittest.TestCase):
     def test_markdown_blocks_header_only(self):
         text = """# This is a heading"""
@@ -143,7 +144,7 @@ class TestMarkdownBlocks(unittest.TestCase):
 3. And this is the third one."""
         self.assertEqual("paragraph", block_to_block_type(text))
 
-# markdown_to_htmlnode
+    # markdown_to_htmlnode
 
     def test_paragraph(self):
         md = """
@@ -227,6 +228,7 @@ this is paragraph text
             html,
             "<div><blockquote>This is a blockquote block</blockquote><p>this is paragraph text</p></div>",
         )
+
 
 if __name__ == "__main__":
     unittest.main()
