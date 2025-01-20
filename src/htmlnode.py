@@ -34,11 +34,13 @@ class LeafNode(HTMLNode):
 
 class ParentNode(HTMLNode):
     def __init__(self, tag, children, props=None):
+        if not children:  # Check for None or empty children
+            raise ValueError("Invalid HTML: ParentNode must have children")
+        if not isinstance(children, list):
+            children = [children]
         super().__init__(tag, None, children, props)
 
     def _children_to_html(self):
-        if not self.children:
-            raise ValueError("Invalid HTML: no children")
         return "".join(child.to_html() for child in self.children)
 
     def to_html(self):

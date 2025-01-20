@@ -94,7 +94,8 @@ class TestMarkdownBlocks(unittest.TestCase):
         self.assertEqual("paragraph", block_to_block_type(text))
 
     def test_block_to_block_type_code(self):
-        text = '```print("this is a code block")```'
+        text = """```print("this is a code block")```
+        """
         self.assertEqual("code", block_to_block_type(text))
 
     def test_block_to_block_type_invalid_code(self):
@@ -229,23 +230,22 @@ this is paragraph text
             "<div><blockquote>This is a blockquote block</blockquote><p>this is paragraph text</p></div>",
         )
 
+    def test_codeblock(self):
+        md = """
+```
+This is a code block
+```
 
-#     def test_codeblock(self):
-#         md = """
-# ```
-# This is a code block
-# ```
+this is paragraph text
 
-# this is paragraph text
+"""
 
-# """
-
-#         node = markdown_to_html_node(md)
-#         html = node.to_html()
-#         self.assertEqual(
-#             html,
-#             "<div><pre><code>This is a code block\n</code></pre><p>this is paragraph text</p></div>",
-#         )
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><pre><code>This is a code block\n</code></pre><p>this is paragraph text</p></div>",
+        )
 
 
 if __name__ == "__main__":

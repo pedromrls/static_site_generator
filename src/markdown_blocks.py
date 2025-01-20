@@ -1,5 +1,5 @@
 import re
-from htmlnode import HTMLNode, LeafNode, ParentNode
+from htmlnode import ParentNode
 from inline_markdown import text_to_textnodes
 from textnode import text_node_to_html_node
 
@@ -12,34 +12,42 @@ block_paragraph = "paragraph"
 
 
 def markdown_to_blocks(markdown):
-    return [block.strip() for block in re.split(r"\n\s*\n", markdown) if block.strip()]
+    blocks = markdown.split("\n\n")
+    filtered_blocks = []
+    for block in blocks:
+        if block == "":
+            continue
+        # Preserve formatting for code blocks
+        if block.startswith("```") and block.endswith("```"):
+            filtered_blocks.append(block)
+        else:
+            filtered_blocks.append(block.strip())
+    return filtered_blocks
 
 
 def block_to_block_type(block):
+    lines = block.split("\n")
+
     if re.match(r"^#{1,6} ", block):
         return block_heading
-    elif re.match(r"^```(.*?)```$", block):
+    if block.strip().startswith("```") and block.strip().endswith("```"):
         return block_code
-    elif block[0] == ">":
+    if block[0] == ">":
         return block_quote
-    elif re.match(r"^[\*\-] ", block):
-        lines = block.split("\n")
+    if re.match(r"^[\*\-] ", block):
         for line in lines:
             if not re.match(r"^[\*\-] ", line):
                 return block_paragraph
         return block_ul
-    elif re.match(r"^\d+\. ", block):
+    if re.match(r"^\d+\. ", block):
         # subject to change
-
-        lines = block.split("\n")
         if lines[0][0] != "1":
             return block_paragraph
         for i, v in enumerate(lines):
             if v[:3] != f"{i + 1}. ":
                 return block_paragraph
         return block_ol
-    else:
-        return block_paragraph
+    return block_paragraph
 
 
 def markdown_to_html_node(markdown):
@@ -86,7 +94,7 @@ def heading_to_htmlnode(block):
 def code_to_htmlnode(block):
     if not block.startswith("```") or not block.endswith("```"):
         raise ValueError("Invalid code block")
-    text = block[3:-3].strip()
+    text = block[4:-3]
     children = text_to_children(text)
     code = ParentNode("code", children)
     return ParentNode("pre", code)
