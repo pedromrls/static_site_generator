@@ -16,7 +16,7 @@ A Python-based static site generator that converts markdown files to HTML pages 
 
 ## Quick Start
 ```bash
-git clone <your-repo-url>
+git clone <repo-url>
 ./main.sh
 ```
 
