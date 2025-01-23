@@ -9,6 +9,39 @@ A Python-based static site generator that converts markdown files to HTML pages 
 * Built-in development server
 * Comprehensive test suite
 
+## Project Structure
+.
+├── README.md
+├── content
+│   ├── index.md
+│   └── majesty
+│       └── index.md
+├── main.sh
+├── src
+│   ├── __init__.py
+│   ├── copy_static.py
+│   ├── gen_content.py
+│   ├── htmlnode.py
+│   ├── inline_markdown.py
+│   ├── main.py
+│   ├── markdown_blocks.py
+│   ├── tests
+│   │   ├── __init__.py
+│   │   ├── test_extract_title.py
+│   │   ├── test_htmlnode.py
+│   │   ├── test_inline_markdown.py
+│   │   ├── test_leafnode.py
+│   │   ├── test_markdown_blocks.py
+│   │   ├── test_parentnode.py
+│   │   └── test_textnode.py
+│   └── textnode.py
+├── static
+│   ├── images
+│   │   └── rivendell.png
+│   └── index.css
+├── template.html
+└── test.sh
+
 ## Installation
 1. Clone the repository
 2. Ensure Python 3.x is installed
