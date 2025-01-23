@@ -1,7 +1,7 @@
 import re
-from htmlnode import ParentNode
-from inline_markdown import text_to_textnodes
-from textnode import text_node_to_html_node
+from .htmlnode import ParentNode
+from .inline_markdown import text_to_textnodes
+from .textnode import text_node_to_html_node
 
 block_heading = "heading"
 block_code = "code"

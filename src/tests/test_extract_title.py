@@ -1,8 +1,9 @@
 import unittest
-from copy_static import extract_title
+from src.gen_content import extract_title
+
 
 class TestExtractTitle(unittest.TestCase):
-    text ="""
+    text = """
 Document Title
 ==============
 
@@ -14,7 +15,7 @@ Document Title
 
 Do you know the way?
 """
-    text2 ="""
+    text2 = """
 Document Title
 ==============
 
@@ -26,6 +27,7 @@ Chapter One: Overview
 
 Do you know the way?
 """
+
     def test_extract_title(self):
         self.assertEqual("Hello", extract_title("# Hello"))
 
@@ -41,5 +43,6 @@ Do you know the way?
         with self.assertRaises(Exception):
             extract_title(self.text2)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

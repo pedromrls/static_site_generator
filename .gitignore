@@ -2,3 +2,4 @@ __pycache__/
 src/file.ipynb
 public/
 public1/
+tests/__pycache__/
