@@ -10,6 +10,7 @@ A Python-based static site generator that converts markdown files to HTML pages 
 * Comprehensive test suite
 
 ## Project Structure
+```
 .
 ├── README.md
 ├── content
@@ -41,7 +42,7 @@ A Python-based static site generator that converts markdown files to HTML pages 
 │   └── index.css
 ├── template.html
 └── test.sh
-
+```
 ## Installation
 1. Clone the repository
 2. Ensure Python 3.x is installed
